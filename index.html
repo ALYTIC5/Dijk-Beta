@@ -103,14 +103,13 @@ Contact: support@finetune.audio
   </div>
 </dialog>
 
-<!-- Persistent audio (kept outside <main> so SPA swaps don't kill it) -->
+
 <audio id="bgAudio" loop preload="auto" playsinline></audio>
 <audio id="introAudio" preload="auto" playsinline></audio>
 
 <style>
   .hidden { display: none !important; }
 
-  /* Black permission card with white text */
   .gate {
     position: fixed; inset: 0;
     display: flex; justify-content: center; align-items: flex-end;
@@ -120,8 +119,8 @@ Contact: support@finetune.audio
   .gate .card {
     width: min(90vw, 460px);
     border-radius: 18px;
-    background: #000; /* black box */
-    color: #fff;      /* white text */
+    background: #000; 
+    color: #fff;      
     box-shadow: 0 12px 40px rgba(0,0,0,.45);
     padding: 20px; text-align: center;
   }
@@ -147,9 +146,7 @@ Contact: support@finetune.audio
 </style>
 
 <script>
-  /* =========================
-     AUDIO FILES (relative paths)
-     ========================= */
+
   const SEASON_TRACKS = [
     "./assets/audio/Soundscapes - Lente - Dijk van een Wijf V2.mp3",
     "./assets/audio/Soundscapes - Zommer - Dijk van een Wijf V2.mp3",
@@ -157,35 +154,29 @@ Contact: support@finetune.audio
     "./assets/audio/Soundscapes - Winter - Dijk van een Wijf V2.mp3"
   ];
 
-  // Part 1 (silent-intro) per language (plays after permission when user picks a language)
   const INTRO_PART1 = {
     nl: "./assets/audio/DveW_Intro_NL_2 (silent intro).mp3",
     en: "./assets/audio/DveW_Intro_EN_2 (silent intro).mp3",
     fy: "./assets/audio/DveW_Intro_FR_2 (silent intro).mp3"
   };
 
-  // Part 2 (introtext) per language (plays on entering conversation)
   const INTRO_PART2 = {
     nl: "./assets/audio/Dijk van een Wijf - Introtext NL_1.2.mp3",
     en: "./assets/audio/Dijk van een Wijf - Introtext EN_1.2.mp3",
     fy: "./assets/audio/Dijk van een Wijf - Introtext FR_1.2.mp3"
   };
 
-  /* =========================
-     HELPERS
-     ========================= */
   function getSeasonIndex(){
-    const m = new Date().getMonth(); // 0..11
-    if (m>=2 && m<=4) return 0; // Lente
-    if (m>=5 && m<=7) return 1; // Zomer
-    if (m>=8 && m<=10) return 2; // Herfst
-    return 3; // Winter
+    const m = new Date().getMonth(); 
+    if (m>=2 && m<=4) return 0; 
+    if (m>=5 && m<=7) return 1; 
+    if (m>=8 && m<=10) return 2;
+    return 3; 
   }
 
   const bgEl    = document.getElementById("bgAudio");
   const introEl = document.getElementById("introAudio");
 
-  // Volumes: background 20%, voice 100%
   let audioCtx, bgGain, voiceGain, graphReady=false, bedStarted=false, pendingLang=null, pendingIntroUrl=null, pendingWidgetClick=false;
 
   function ensureGraph(){
@@ -206,7 +197,7 @@ Contact: support@finetune.audio
     if (audioCtx.state === "suspended") { try { await audioCtx.resume(); } catch(e){} }
     bgEl.src = SEASON_TRACKS[getSeasonIndex()];
     try { await bgEl.play(); } catch(e){}
-    bedStarted = true; // keep running (SPA navigation keeps audio elements alive)
+    bedStarted = true;
   }
 
   async function playVoice(filePath){
@@ -217,7 +208,6 @@ Contact: support@finetune.audio
     try { await introEl.play(); } catch(e){}
   }
 
-  // SPA loader: replace only <main> so audio continues
   async function loadIntoMain(url){
     const resolved = url.startsWith("/") ? "."+url : url;
     try{
@@ -230,16 +220,15 @@ Contact: support@finetune.audio
         document.querySelector("main").innerHTML = newMain.innerHTML;
       }
       history.pushState({}, "", resolved);
-      // after swapping content, re-hook widget listeners if present
+
       hookElevenLabsWidgetClicks();
       return true;
     }catch(err){
-      location.href = resolved; // fallback (bed will restart if page reloads)
+      location.href = resolved; 
       return false;
     }
   }
 
-  // Load ElevenLabs script on conversation pages (for real widget)
   function ensureElevenLabsScript(){
     if (window.__elevenlabsEmbedLoaded) return;
     const existing = document.querySelector('script[src*="@elevenlabs/convai-widget-embed"]');
@@ -257,15 +246,11 @@ Contact: support@finetune.audio
     return "nl";
   }
 
-  /* =========================
-     GATE — show only once per session on initial page load
-     ========================= */
   const gate = document.getElementById("gate");
   const privacyDialog = document.getElementById("privacyDialog");
   document.getElementById("openPrivacy").addEventListener("click", () => privacyDialog.showModal());
   document.getElementById("closePrivacy").addEventListener("click", () => privacyDialog.close());
 
-  // If user clicks "Niet nu" → send them to Sense of Place site
   document.getElementById("denyBtn").addEventListener("click", () => {
     window.location.href = "https://sense-of-place.eu/";
   });
@@ -278,12 +263,10 @@ Contact: support@finetune.audio
       localStorage.setItem("micGranted","1");
       gate.classList.add("hidden");
 
-      // If this allow came from a widget click, re-trigger the widget click so it opens immediately.
       if (pendingWidgetClick) {
         pendingWidgetClick = false;
         const widget = document.querySelector("elevenlabs-convai");
         if (widget) {
-          // Next tick to allow web component to settle
           setTimeout(() => widget.click(), 0);
         }
       }
@@ -292,7 +275,6 @@ Contact: support@finetune.audio
     }
   }
 
-  // Show the gate only on the first visit within this browser session
   window.addEventListener("DOMContentLoaded", () => {
     if (!sessionStorage.getItem("gateShown")) {
       gate.classList.remove("hidden");
@@ -300,13 +282,8 @@ Contact: support@finetune.audio
     }
   });
 
-  /* =========================
-     LANGUAGE FLOWS
-     If mic already granted → go straight to soundscape + language Part 1 + intro page.
-     Else → gate may be visible; on allow we continue.
-     ========================= */
+
   function continueAfterAllow(lang, introUrl){
-    // When Allow is pressed later, this listener will run once
     const handler = async () => {
       document.getElementById("allowBtn").removeEventListener("click", handler);
       await startSoundscapeOnce();
@@ -323,7 +300,6 @@ Contact: support@finetune.audio
       await playVoice(INTRO_PART1.nl);
       loadIntoMain("./introduction.html");
     } else {
-      // Gate might be open or already closed for this session; queue continuation on allow
       continueAfterAllow("nl", "./introduction.html");
     }
   });
@@ -350,10 +326,6 @@ Contact: support@finetune.audio
     }
   });
 
-  /* =========================
-     CONVERSATION NAVIGATION:
-     keep bed; stop Part 1; then play language-correct Part 2
-     ========================= */
   document.addEventListener("click", async (e)=>{
     const a = e.target.closest("a[href]");
     if (!a) return;
@@ -371,16 +343,10 @@ Contact: support@finetune.audio
     }
   });
 
-  // Keep SPA feel on back/forward while bed continues
   window.addEventListener("popstate", () => {
     loadIntoMain(location.pathname);
   });
 
-  /* =========================
-     ELEVENLABS WIDGET HOOK:
-     If user taps the widget before granting mic, show gate and
-     on Allow re-dispatch the click so the widget opens without asking again.
-     ========================= */
   function hookElevenLabsWidgetClicks(){
     document.removeEventListener("click", widgetIntercept, true);
     document.addEventListener("click", widgetIntercept, true);
@@ -389,20 +355,17 @@ Contact: support@finetune.audio
   function widgetIntercept(e){
     const widget = e.target.closest("elevenlabs-convai");
     if (!widget) return;
-    if (localStorage.getItem("micGranted")==="1") return; // already ok
+    if (localStorage.getItem("micGranted")==="1") return; 
 
-    // Prevent widget from handling the click first; show our gate simultaneously
     e.stopPropagation();
     e.preventDefault();
     pendingWidgetClick = true;
     gate.classList.remove("hidden");
   }
 
-  // Initial hook (index), and will be re-hooked after SPA loads
   hookElevenLabsWidgetClicks();
 </script>
 
-<!-- Load ElevenLabs early so widget is ready when SPA reaches conversation -->
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async></script>
 </body>
 </html>
