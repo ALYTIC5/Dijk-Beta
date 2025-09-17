@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+	<meta charset="UTF-8"/>
+	<link rel="stylesheet" href="./src/css/style.css" media="all"/>
+	<title>Dijk van een Wijf | Verhalen en wijsheden over natuur en tijd</title>
+	<meta name="description" content="Ga in gesprek met het Wad en ontdek eeuwenoude verhalen, wijsheden over de natuur en inspirerende inzichten. Stel je vragen en laat je meenemen op een onvergetelijke reis door de tijd en natuur."/>
+	<meta name="keywords" content="gesprek met het Wad, natuur verhalen, wijsheden van het Wad, interactief gesprek, tijd en natuur, het Wad, stem van het Wad, Wad inspiratie, vragen stellen over natuur, eeuwenoude verhalen"/>
+	<meta name="robots" content="index,follow"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="Dijk van een Wijf" />
+	<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+</head>
+<body class="page page--home">
+<main>
+	<article>
+		<section>
+			<div class="relative container pt-8 pb-14 mb-10 z-10">
+				<div class="relative">
+					<div class="relative z-10">
+						<div class="flex justify-between items-center">
+							<a href="./introduction.html">
+								<figure>
+									<img src="./assets/img/DVEW_Logo_Black.png" alt="Ga naar de homepagina">
+								</figure>
+							</a>
+						</div>
+						<h1>Ontdek het Wad.</h1>
+						<p class="font-semibold text-pretty">Hier, aan de voet van Dijk van een Wijf,
+start jouw reis. Luister naar de introductie
+en ga daarna in gesprek met het Wad.</p>
+						<p class="text-pretty">Via de microfoon van je telefoon kun je al je vragen stellen; over het kunstwerk, over het Wad, de planten en dieren. Laat je meevoeren in alle, soms eeuwenoude, verhalen van dit unieke gebied.</p>
+
+						<a href="./introduction.html" id="btn-nl" class="btn btn--headset group" title="Luister naar het Wad">
+							<span>Luister naar het Wad</span>
+							<i class="icon-headset text-[22px] group-hover:ml-2"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="container">
+				<div class="flex flex-col items-start gap-2.5">
+					<a href="./introduction_en.html" id="btn-en" class="btn btn--white btn--small" title="Listen to the Wadden">
+						<figure class="size-5 rounded-full overflow-hidden grayscale">
+							<img class="w-full h-full object-cover object-center" src="./assets/img/united-kingdom-flag-icon.svg" alt="Engelse vlag"/>
+						</figure>
+						<span>Listen to the Wadden</span>
+						<i class="icon-headset"></i>
+					</a>
+					<a href="./introduction_fy.html" id="btn-fy" class="btn btn--white btn--small" title="Harkje nei it Waad">
+						<i class="icon-fryslan"></i>
+						<span>Harkje nei it Waad</span>
+						<i class="icon-headset"></i>
+					</a>
+				</div>
+			</div>
+		</section>
+		<div class="absolute bg-cover right-1/2 top-5 -translate-x-1/2 bg-[url(../../assets/img/backgrounds/bg-white-blob.svg)] bg-no-repeat w-[720px] left-[calc(28%)] sm:left-[calc(49%)] sm:w-[500px] h-[636px]" style="translate: calc(-50% + 8px) 0;"></div>
+	</article>
+</main>
+
+
+<div class="gate hidden" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="card">
+    <h1 id="gateTitle">Microfoon inschakelen?</h1>
+    <p>Deze ervaring gebruikt de ElevenLabs stem-assistent en heeft toegang tot je microfoon nodig.</p>
+    <div class="row">
+      <button class="btn btn-deny" id="denyBtn" type="button">Niet nu</button>
+      <button class="btn btn-allow" id="allowBtn" type="button">Toestaan</button>
+    </div>
+    <p class="small">
+      🌐 Uitgebreider privacy statement
+      (<span id="openPrivacy" class="link" role="button" tabindex="0" aria-controls="privacyDialog">lees meer</span>)
+    </p>
+  </div>
+</div>
+
+<dialog id="privacyDialog" class="privacy" aria-labelledby="privacyTitle">
+  <div class="dialog-header">
+    <h2 class="dialog-title" id="privacyTitle">🌐 Uitgebreider privacy statement</h2>
+    <button class="dialog-close" id="closePrivacy" aria-label="Sluiten">Sluiten</button>
+  </div>
+  <div class="dialog-body">
+    <div class="dialog-content">
+Privacyverklaring interactieve ervaring
+
+Deze applicatie maakt gebruik van:
+• OpenAI (taalverwerking)
+• ElevenLabs (tekst-naar-spraak)
+
+Wanneer je praat of tekst invoert, wordt dit realtime verwerkt om te kunnen antwoorden. Gegevens worden uitsluitend gebruikt voor het lopende gesprek en niet bewaard door Fine Tune Audio, OpenAI of ElevenLabs.
+
+Rechtsgrond: toestemming.
+Je rechten: je kunt je toestemming intrekken en ons om uitleg vragen.
+Contact: support@finetune.audio
+    </div>
+  </div>
+</dialog>
+
+<!-- Persistent audio (kept outside <main> so SPA swaps don't kill it) -->
+<audio id="bgAudio" loop preload="auto" playsinline></audio>
+<audio id="introAudio" preload="auto" playsinline></audio>
+
+<style>
+  .hidden { display: none !important; }
+
+  /* Black permission card with white text */
+  .gate {
+    position: fixed; inset: 0;
+    display: flex; justify-content: center; align-items: flex-end;
+    padding-bottom: 18%; z-index: 1000;
+    background: rgba(0,0,0,0.35);
+  }
+  .gate .card {
+    width: min(90vw, 460px);
+    border-radius: 18px;
+    background: #000; /* black box */
+    color: #fff;      /* white text */
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    padding: 20px; text-align: center;
+  }
+  .gate .card h1 { font-size: 1.15rem; margin: 6px 0 10px; }
+  .gate .card p  { font-size: .98rem; margin: 0 10px 12px; color: #fff; }
+  .gate .row { display: flex; gap: 10px; }
+  .gate .btn { flex: 1 1 auto; padding: 12px 14px; border-radius: 12px; border: 2px solid transparent; font-weight: 700; cursor: pointer; }
+  .gate .btn-allow { background: var(--color-orange); color: #111; } /* same orange as site */
+  .gate .btn-deny  { background: #1a1a1a; color: #fff; border-color: #333; }
+  .gate .small { font-size: 0.86rem; color: #fff; margin-top: 8px; }
+  .gate .link { color: #fff; text-decoration: underline; cursor: pointer; font-weight: 700; }
+
+  dialog.privacy {
+    width: min(92vw, 560px); border: none; border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35); padding: 0; max-height: 80vh;
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.45); }
+  .dialog-header { display:flex; align-items:center; justify-content:space-between; padding: 14px 16px; border-bottom: 1px solid #eee; }
+  .dialog-title { margin:0; font-size: 1rem; font-weight: 800; }
+  .dialog-close { border:none; background:#eee; color:#111; font-weight:700; padding:8px 12px; border-radius:10px; cursor:pointer; }
+  .dialog-body { padding: 18px 18px 6px; }
+  .dialog-content { padding: 0 16px 16px; font-size: .95rem; line-height: 1.45; white-space: pre-wrap; }
+</style>
+
+<script>
+  /* =========================
+     AUDIO FILES (relative paths)
+     ========================= */
+  const SEASON_TRACKS = [
+    "./assets/audio/Soundscapes - Lente - Dijk van een Wijf V2.mp3",
+    "./assets/audio/Soundscapes - Zommer - Dijk van een Wijf V2.mp3",
+    "./assets/audio/Soundscapes - Herfst - Dijk van een Wijf V2.mp3",
+    "./assets/audio/Soundscapes - Winter - Dijk van een Wijf V2.mp3"
+  ];
+
+  // Part 1 (silent-intro) per language (plays after permission when user picks a language)
+  const INTRO_PART1 = {
+    nl: "./assets/audio/DveW_Intro_NL_2 (silent intro).mp3",
+    en: "./assets/audio/DveW_Intro_EN_2 (silent intro).mp3",
+    fy: "./assets/audio/DveW_Intro_FR_2 (silent intro).mp3"
+  };
+
+  // Part 2 (introtext) per language (plays on entering conversation)
+  const INTRO_PART2 = {
+    nl: "./assets/audio/Dijk van een Wijf - Introtext NL_1.2.mp3",
+    en: "./assets/audio/Dijk van een Wijf - Introtext EN_1.2.mp3",
+    fy: "./assets/audio/Dijk van een Wijf - Introtext FR_1.2.mp3"
+  };
+
+  /* =========================
+     HELPERS
+     ========================= */
+  function getSeasonIndex(){
+    const m = new Date().getMonth(); // 0..11
+    if (m>=2 && m<=4) return 0; // Lente
+    if (m>=5 && m<=7) return 1; // Zomer
+    if (m>=8 && m<=10) return 2; // Herfst
+    return 3; // Winter
+  }
+
+  const bgEl    = document.getElementById("bgAudio");
+  const introEl = document.getElementById("introAudio");
+
+  // Volumes: background 20%, voice 100%
+  let audioCtx, bgGain, voiceGain, graphReady=false, bedStarted=false, pendingLang=null, pendingIntroUrl=null, pendingWidgetClick=false;
+
+  function ensureGraph(){
+    if (graphReady) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    bgGain = audioCtx.createGain();
+    voiceGain = audioCtx.createGain();
+    bgGain.gain.value   = 0.20;
+    voiceGain.gain.value= 1.00;
+    audioCtx.createMediaElementSource(bgEl).connect(bgGain).connect(audioCtx.destination);
+    audioCtx.createMediaElementSource(introEl).connect(voiceGain).connect(audioCtx.destination);
+    graphReady = true;
+  }
+
+  async function startSoundscapeOnce(){
+    if (bedStarted) return;
+    ensureGraph();
+    if (audioCtx.state === "suspended") { try { await audioCtx.resume(); } catch(e){} }
+    bgEl.src = SEASON_TRACKS[getSeasonIndex()];
+    try { await bgEl.play(); } catch(e){}
+    bedStarted = true; // keep running (SPA navigation keeps audio elements alive)
+  }
+
+  async function playVoice(filePath){
+    ensureGraph();
+    if (audioCtx.state === "suspended") { try { await audioCtx.resume(); } catch(e){} }
+    try { introEl.pause(); introEl.currentTime = 0; } catch(e){}
+    introEl.src = filePath;
+    try { await introEl.play(); } catch(e){}
+  }
+
+  // SPA loader: replace only <main> so audio continues
+  async function loadIntoMain(url){
+    const resolved = url.startsWith("/") ? "."+url : url;
+    try{
+      const res = await fetch(resolved, { credentials: "same-origin" });
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const newMain = doc.querySelector("main");
+      if (newMain){
+        if (doc.body && doc.body.className) document.body.className = doc.body.className;
+        document.querySelector("main").innerHTML = newMain.innerHTML;
+      }
+      history.pushState({}, "", resolved);
+      // after swapping content, re-hook widget listeners if present
+      hookElevenLabsWidgetClicks();
+      return true;
+    }catch(err){
+      location.href = resolved; // fallback (bed will restart if page reloads)
+      return false;
+    }
+  }
+
+  // Load ElevenLabs script on conversation pages (for real widget)
+  function ensureElevenLabsScript(){
+    if (window.__elevenlabsEmbedLoaded) return;
+    const existing = document.querySelector('script[src*="@elevenlabs/convai-widget-embed"]');
+    if (existing){ window.__elevenlabsEmbedLoaded = true; return; }
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
+    s.async = true;
+    s.onload = ()=>{ window.__elevenlabsEmbedLoaded = true; };
+    document.head.appendChild(s);
+  }
+
+  function langFromHref(href){
+    if (/(_en)\.html$/i.test(href)) return "en";
+    if (/(_fy)\.html$/i.test(href)) return "fy";
+    return "nl";
+  }
+
+  /* =========================
+     GATE — show only once per session on initial page load
+     ========================= */
+  const gate = document.getElementById("gate");
+  const privacyDialog = document.getElementById("privacyDialog");
+  document.getElementById("openPrivacy").addEventListener("click", () => privacyDialog.showModal());
+  document.getElementById("closePrivacy").addEventListener("click", () => privacyDialog.close());
+
+  // If user clicks "Niet nu" → send them to Sense of Place site
+  document.getElementById("denyBtn").addEventListener("click", () => {
+    window.location.href = "https://sense-of-place.eu/";
+  });
+
+  document.getElementById("allowBtn").addEventListener("click", onAllowMic);
+
+  async function onAllowMic() {
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      localStorage.setItem("micGranted","1");
+      gate.classList.add("hidden");
+
+      // If this allow came from a widget click, re-trigger the widget click so it opens immediately.
+      if (pendingWidgetClick) {
+        pendingWidgetClick = false;
+        const widget = document.querySelector("elevenlabs-convai");
+        if (widget) {
+          // Next tick to allow web component to settle
+          setTimeout(() => widget.click(), 0);
+        }
+      }
+    } catch {
+      alert("Microfoontoegang geweigerd. Schakel dit in om door te gaan.");
+    }
+  }
+
+  // Show the gate only on the first visit within this browser session
+  window.addEventListener("DOMContentLoaded", () => {
+    if (!sessionStorage.getItem("gateShown")) {
+      gate.classList.remove("hidden");
+      sessionStorage.setItem("gateShown", "1");
+    }
+  });
+
+  /* =========================
+     LANGUAGE FLOWS
+     If mic already granted → go straight to soundscape + language Part 1 + intro page.
+     Else → gate may be visible; on allow we continue.
+     ========================= */
+  function continueAfterAllow(lang, introUrl){
+    // When Allow is pressed later, this listener will run once
+    const handler = async () => {
+      document.getElementById("allowBtn").removeEventListener("click", handler);
+      await startSoundscapeOnce();
+      await playVoice(INTRO_PART1[lang] || INTRO_PART1.nl);
+      loadIntoMain(introUrl || "./introduction.html");
+    };
+    document.getElementById("allowBtn").addEventListener("click", handler);
+  }
+
+  document.getElementById("btn-nl").addEventListener("click", async (e)=>{
+    e.preventDefault();
+    if (localStorage.getItem("micGranted")==="1"){
+      await startSoundscapeOnce();
+      await playVoice(INTRO_PART1.nl);
+      loadIntoMain("./introduction.html");
+    } else {
+      // Gate might be open or already closed for this session; queue continuation on allow
+      continueAfterAllow("nl", "./introduction.html");
+    }
+  });
+
+  document.getElementById("btn-en").addEventListener("click", async (e)=>{
+    e.preventDefault();
+    if (localStorage.getItem("micGranted")==="1"){
+      await startSoundscapeOnce();
+      await playVoice(INTRO_PART1.en);
+      loadIntoMain("./introduction_en.html");
+    } else {
+      continueAfterAllow("en", "./introduction_en.html");
+    }
+  });
+
+  document.getElementById("btn-fy").addEventListener("click", async (e)=>{
+    e.preventDefault();
+    if (localStorage.getItem("micGranted")==="1"){
+      await startSoundscapeOnce();
+      await playVoice(INTRO_PART1.fy);
+      loadIntoMain("./introduction_fy.html");
+    } else {
+      continueAfterAllow("fy", "./introduction_fy.html");
+    }
+  });
+
+  /* =========================
+     CONVERSATION NAVIGATION:
+     keep bed; stop Part 1; then play language-correct Part 2
+     ========================= */
+  document.addEventListener("click", async (e)=>{
+    const a = e.target.closest("a[href]");
+    if (!a) return;
+    const href = a.getAttribute("href") || "";
+    const convoRE = /(^|\/)conversation(_en|_fy)?\.html$/i;
+    if (convoRE.test(href)){
+      e.preventDefault();
+      const lang = langFromHref(href);
+      try { introEl.pause(); introEl.currentTime = 0; } catch(e){}
+      ensureElevenLabsScript();
+      const ok = await loadIntoMain(href);
+      if (ok){
+        await playVoice(INTRO_PART2[lang] || INTRO_PART2.nl);
+      }
+    }
+  });
+
+  // Keep SPA feel on back/forward while bed continues
+  window.addEventListener("popstate", () => {
+    loadIntoMain(location.pathname);
+  });
+
+  /* =========================
+     ELEVENLABS WIDGET HOOK:
+     If user taps the widget before granting mic, show gate and
+     on Allow re-dispatch the click so the widget opens without asking again.
+     ========================= */
+  function hookElevenLabsWidgetClicks(){
+    document.removeEventListener("click", widgetIntercept, true);
+    document.addEventListener("click", widgetIntercept, true);
+  }
+
+  function widgetIntercept(e){
+    const widget = e.target.closest("elevenlabs-convai");
+    if (!widget) return;
+    if (localStorage.getItem("micGranted")==="1") return; // already ok
+
+    // Prevent widget from handling the click first; show our gate simultaneously
+    e.stopPropagation();
+    e.preventDefault();
+    pendingWidgetClick = true;
+    gate.classList.remove("hidden");
+  }
+
+  // Initial hook (index), and will be re-hooked after SPA loads
+  hookElevenLabsWidgetClicks();
+</script>
+
+<!-- Load ElevenLabs early so widget is ready when SPA reaches conversation -->
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async></script>
+</body>
+</html>
