@@ -149,11 +149,17 @@ De verwerking vindt uitsluitend plaats op basis van uw toestemming. Indien u gee
   }
   .gate .card h1 { font-size: 1.15rem; margin: 6px 0 10px; }
   .gate .card p  { font-size: .98rem; margin: 0 10px 12px; color: #fff; }
-  .gate .row { display: flex; gap: 10px; }
+
+  /* CHANGED: add extra space below the two buttons */
+  .gate .row { display: flex; gap: 10px; margin-bottom: 24px; }
+
   .gate .btn { flex: 1 1 auto; padding: 12px 14px; border-radius: 12px; border: 2px solid transparent; font-weight: 700; cursor: pointer; }
   .gate .btn-allow { background: var(--color-orange); color: #111; } /* same orange as site */
   .gate .btn-deny  { background: #1a1a1a; color: #fff; border-color: #333; }
-  .gate .small { font-size: 0.86rem; color: #fff; margin-top: 8px; }
+
+  /* CHANGED: add extra space above the privacy statement */
+  .gate .small { font-size: 0.86rem; color: #fff; margin-top: 20px; }
+
   .gate .link { color: #fff; text-decoration: underline; cursor: pointer; font-weight: 700; }
 
   dialog.privacy {
