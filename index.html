@@ -45,7 +45,8 @@ en ga daarna in gesprek met het Wad.</p>
 			</div>
 
 			<div class="container">
-				<div class="flex flex-col items-start gap-2.5">
+				<!-- Center on X-axis, keep the same Y placement -->
+				<div class="flex flex-col items-center gap-2.5">
 					<a href="./introduction_en.html" id="btn-en" class="btn btn--white btn--small" title="Listen to the Wadden">
 						<figure class="size-5 rounded-full overflow-hidden grayscale">
 							<img class="w-full h-full object-cover object-center" src="./assets/img/united-kingdom-flag-icon.svg" alt="Engelse vlag"/>
@@ -393,6 +394,31 @@ De verwerking vindt uitsluitend plaats op basis van uw toestemming. Indien u gee
   }
 
   hookElevenLabsWidgetClicks();
+
+  /* === NEW: make EN/FR exactly the same size as the NL button === */
+  function sizeLangButtons() {
+    const nl = document.getElementById('btn-nl');
+    const en = document.getElementById('btn-en');
+    const fy = document.getElementById('btn-fy');
+    if (!nl || !en || !fy) return;
+
+    // Measure the Dutch button
+    const rect = nl.getBoundingClientRect();
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
+
+    // Apply exact width/height to EN and FR, keep them centered horizontally
+    [en, fy].forEach(btn => {
+      btn.style.width = width + 'px';
+      btn.style.minWidth = width + 'px';
+      btn.style.height = height + 'px';
+      btn.style.display = 'inline-flex';
+      btn.style.alignItems = 'center';
+      btn.style.justifyContent = 'center';
+    });
+  }
+  window.addEventListener('load', sizeLangButtons);
+  window.addEventListener('resize', sizeLangButtons);
 </script>
 
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async></script>
