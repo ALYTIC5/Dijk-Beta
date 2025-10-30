@@ -244,12 +244,10 @@
 </style>
 
 <script>
-  /* ---- DISABLE PRIVACY/PERMISSION GATE ----
-     Pre-set flags so the gate never shows and clicks aren't intercepted.
-  */
+
   try {
-    localStorage.setItem("micGranted", "1");
-    sessionStorage.setItem("gateShown", "1");
+    localStorage.setItem("micGranted", "0");
+    sessionStorage.setItem("gateShown", "0");
   } catch (e) {}
 </script>
 
